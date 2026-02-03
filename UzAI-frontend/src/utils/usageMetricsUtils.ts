@@ -33,7 +33,7 @@ export function computeMetricsFromRecords(
 		avgRelativeSavingsWithAiPercent = sumPercent / withAi.length;
 	}
 
-	const sumStoryPoints = records.reduce((s, r) => s + r.storyPointsByte, 0);
+	const sumStoryPoints = records.reduce((s, r) => s + r.storyPoints, 0);
 	let estimationErrorPercent = 0;
 	if (sumStoryPoints > 0 && totalSpent > 0) {
 		const ratio = totalSpent / sumStoryPoints;
@@ -41,7 +41,7 @@ export function computeMetricsFromRecords(
 		let count = 0;
 		for (const r of records) {
 			if (r.timeSpent === 0) continue;
-			const predicted = r.storyPointsByte * ratio;
+			const predicted = r.storyPoints * ratio;
 			sumApe += (Math.abs(r.timeSpent - predicted) / r.timeSpent) * 100;
 			count++;
 		}

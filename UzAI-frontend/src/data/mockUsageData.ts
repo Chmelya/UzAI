@@ -1,4 +1,5 @@
 import type { UsageRecord, UsageResponse } from '../types/usageRecord';
+import { STORY_POINTS_VALUES } from '../types/usageRecord';
 import { computeMetricsFromRecords } from '../utils/usageMetricsUtils';
 
 function randomInt(min: number, max: number): number {
@@ -7,6 +8,10 @@ function randomInt(min: number, max: number): number {
 
 function randomBool(probability = 0.5): boolean {
 	return Math.random() < probability;
+}
+
+function pickStoryPoints(): (typeof STORY_POINTS_VALUES)[number] {
+	return STORY_POINTS_VALUES[randomInt(0, STORY_POINTS_VALUES.length - 1)];
 }
 
 function isoDate(d: Date): string {
@@ -20,8 +25,13 @@ export function generateMockUsageRecords(): UsageRecord[] {
 	const dayMs = 24 * 60 * 60 * 1000;
 
 	for (let i = 0; i < 50; i++) {
-		const storyPoints = randomInt(1, 8);
-		const newStoryPoints = Math.max(1, storyPoints + randomInt(-2, 2));
+		const storyPoints = pickStoryPoints();
+		const idx = STORY_POINTS_VALUES.indexOf(storyPoints);
+		const newIdx = Math.max(
+			0,
+			Math.min(STORY_POINTS_VALUES.length - 1, idx + randomInt(-2, 2))
+		);
+		const newStoryPoints = STORY_POINTS_VALUES[newIdx];
 		const isAiUsed = randomBool(0.6);
 		const timeSpent = randomInt(15, 240);
 		const timeSaved = isAiUsed ? randomInt(5, Math.min(120, timeSpent)) : 0;
@@ -33,8 +43,8 @@ export function generateMockUsageRecords(): UsageRecord[] {
 					now - i * dayMs * randomInt(0, 3) - randomInt(0, 23 * 60 * 60 * 1000)
 				)
 			),
-			storyPointsByte: storyPoints,
-			newStoryPointsByte: newStoryPoints,
+			storyPoints,
+			newStoryPoints,
 			isAiUsed,
 			timeSpent,
 			timeSaved,

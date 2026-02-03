@@ -13,12 +13,14 @@ import {
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import { STORY_POINTS_VALUES } from '../../types/usageRecord';
 import type { UsageTableFilterState } from '../../utils/usageTableUtils';
 import { hasActiveFilters } from '../../utils/usageTableUtils';
 
 const INPUT_WIDTH = 92;
 const DATE_WIDTH = 130;
 const SELECT_WIDTH = 96;
+const STORY_POINTS_SELECT_WIDTH = 72;
 
 interface UsageTableFiltersProps {
 	open: boolean;
@@ -154,31 +156,40 @@ export function UsageTableFilters({
 						</Select>
 					</FormControl>
 					<Stack direction='row' spacing={0.75} alignItems='flex-end'>
-						<TextField
-							size='small'
-							label='Story pts'
-							placeholder='min'
-							type='number'
-							inputProps={{ min: 0, max: 255 }}
-							value={filter.storyPointsMin}
-							onChange={(e) =>
-								onFilterChange({ ...filter, storyPointsMin: e.target.value })
-							}
-							sx={{ width: INPUT_WIDTH }}
-							variant='outlined'
-						/>
-						<TextField
-							size='small'
-							placeholder='max'
-							type='number'
-							inputProps={{ min: 0, max: 255 }}
-							value={filter.storyPointsMax}
-							onChange={(e) =>
-								onFilterChange({ ...filter, storyPointsMax: e.target.value })
-							}
-							sx={{ width: INPUT_WIDTH }}
-							variant='outlined'
-						/>
+						<FormControl size='small' sx={{ width: STORY_POINTS_SELECT_WIDTH }}>
+							<InputLabel>Story pts min</InputLabel>
+							<Select
+								value={filter.storyPointsMin}
+								label='Story pts min'
+								onChange={(e) =>
+									onFilterChange({ ...filter, storyPointsMin: e.target.value })
+								}
+							>
+								<MenuItem value=''>All</MenuItem>
+								{STORY_POINTS_VALUES.map((v) => (
+									<MenuItem key={v} value={String(v)}>
+										{v}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						<FormControl size='small' sx={{ width: STORY_POINTS_SELECT_WIDTH }}>
+							<InputLabel>Story pts max</InputLabel>
+							<Select
+								value={filter.storyPointsMax}
+								label='Story pts max'
+								onChange={(e) =>
+									onFilterChange({ ...filter, storyPointsMax: e.target.value })
+								}
+							>
+								<MenuItem value=''>All</MenuItem>
+								{STORY_POINTS_VALUES.map((v) => (
+									<MenuItem key={v} value={String(v)}>
+										{v}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
 					</Stack>
 					<Stack direction='row' spacing={0.75} alignItems='flex-end'>
 						<TextField

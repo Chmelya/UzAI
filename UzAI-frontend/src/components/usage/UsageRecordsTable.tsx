@@ -24,8 +24,8 @@ interface UsageRecordsTableProps {
 
 const COLUMNS: { id: SortColumn; label: string; align?: 'right' }[] = [
 	{ id: 'timestamp', label: 'Timestamp' },
-	{ id: 'storyPointsByte', label: 'Story pts', align: 'right' },
-	{ id: 'newStoryPointsByte', label: 'New story pts', align: 'right' },
+	{ id: 'storyPoints', label: 'Story pts', align: 'right' },
+	{ id: 'newStoryPoints', label: 'New story pts', align: 'right' },
 	{ id: 'isAiUsed', label: 'AI used' },
 	{ id: 'timeSpent', label: 'Time spent', align: 'right' },
 	{ id: 'timeSaved', label: 'Time saved', align: 'right' },
@@ -84,8 +84,8 @@ export function UsageRecordsTable({
 						filteredRecords.map((row) => (
 							<TableRow key={row.id} hover>
 								<TableCell>{formatDate(row.timestamp)}</TableCell>
-								<TableCell align='right'>{row.storyPointsByte}</TableCell>
-								<TableCell align='right'>{row.newStoryPointsByte}</TableCell>
+								<TableCell align='right'>{row.storyPoints}</TableCell>
+								<TableCell align='right'>{row.newStoryPoints}</TableCell>
 								<TableCell>{row.isAiUsed ? 'Yes' : 'No'}</TableCell>
 								<TableCell align='right'>{row.timeSpent}</TableCell>
 								<TableCell align='right'>{row.timeSaved}</TableCell>

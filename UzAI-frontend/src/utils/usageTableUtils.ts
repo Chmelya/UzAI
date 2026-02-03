@@ -3,8 +3,8 @@ import type { UsageRecord } from '../types/usageRecord';
 export type SortColumn = keyof Pick<
 	UsageRecord,
 	| 'timestamp'
-	| 'storyPointsByte'
-	| 'newStoryPointsByte'
+	| 'storyPoints'
+	| 'newStoryPoints'
 	| 'isAiUsed'
 	| 'timeSpent'
 	| 'timeSaved'
@@ -56,8 +56,7 @@ export function filterRecords(
 			filter.storyPointsMin === '' ? -Infinity : Number(filter.storyPointsMin);
 		const spMax =
 			filter.storyPointsMax === '' ? Infinity : Number(filter.storyPointsMax);
-		if (row.storyPointsByte < spMin || row.storyPointsByte > spMax)
-			return false;
+		if (row.storyPoints < spMin || row.storyPoints > spMax) return false;
 		const tsMin =
 			filter.timeSpentMin === '' ? -Infinity : Number(filter.timeSpentMin);
 		const tsMax =

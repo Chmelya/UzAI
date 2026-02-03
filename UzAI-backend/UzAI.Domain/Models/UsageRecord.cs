@@ -11,9 +11,11 @@ public class UsageRecord
 
 	public DateTime Timestamp { get; set; }
 
-	public byte StoryPointsByte { get; set; }
+	[Column("StoryPointsByte")]
+	public StoryPoints StoryPoints { get; set; }
 
-	public byte NewStoryPointsByte { get; set; }
+	[Column("NewStoryPointsByte")]
+	public StoryPoints NewStoryPoints { get; set; }
 
 	public bool IsAiUsed { get; set; }
 

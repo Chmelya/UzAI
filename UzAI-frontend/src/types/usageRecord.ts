@@ -1,8 +1,12 @@
+/** Allowed story point values (planning scale). */
+export const STORY_POINTS_VALUES = [1, 2, 3, 5, 8, 13, 25] as const;
+export type StoryPoints = (typeof STORY_POINTS_VALUES)[number];
+
 export interface UsageRecord {
 	id: number;
 	timestamp: string;
-	storyPointsByte: number;
-	newStoryPointsByte: number;
+	storyPoints: StoryPoints;
+	newStoryPoints: StoryPoints;
 	isAiUsed: boolean;
 	timeSpent: number;
 	timeSaved: number;

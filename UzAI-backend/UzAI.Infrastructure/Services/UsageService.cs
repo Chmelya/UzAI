@@ -61,9 +61,9 @@ public class UsageService : IUsageService
 			avgRelativeSavingsWithAiPercent = sumPercent / withAiRecords.Count;
 		}
 
-		// Estimation error: MAPE of StoryPointsByte vs actual time (scale story points to time by global ratio)
+		// Estimation error: MAPE of StoryPoints vs actual time (scale story points to time by global ratio)
 		double estimationErrorPercent = 0;
-		double sumStoryPoints = records.Sum(r => r.StoryPointsByte);
+		double sumStoryPoints = records.Sum(r => (byte)r.StoryPoints);
 		if (sumStoryPoints > 0 && totalSpent > 0)
 		{
 			double ratio = totalSpent / sumStoryPoints;
@@ -72,7 +72,7 @@ public class UsageService : IUsageService
 			foreach (var r in records)
 			{
 				if (r.TimeSpent == 0) continue;
-				double predicted = r.StoryPointsByte * ratio;
+				double predicted = (byte)r.StoryPoints * ratio;
 				sumApe += Math.Abs(r.TimeSpent - predicted) / r.TimeSpent * 100.0;
 				count++;
 			}
