@@ -131,15 +131,16 @@ export default function UsageRecordsPage() {
 
 			<Snackbar
 				open={toastOpen}
-				autoHideDuration={6000}
+				autoHideDuration={3000}
 				onClose={() => setToastOpen(false)}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 			>
 				<Alert
 					elevation={6}
 					variant='filled'
 					severity='error'
 					onClose={() => setToastOpen(false)}
+					sx={{ maxWidth: 360 }}
 				>
 					{error}
 				</Alert>
