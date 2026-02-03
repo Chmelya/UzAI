@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using UzAI.Application.Models;
 using UzAI.Application.Services;
-using UzAI.Domain.Models;
 
 namespace UzAI.Api.Controllers;
 
@@ -8,22 +8,21 @@ namespace UzAI.Api.Controllers;
 [Route("api/[controller]")]
 public class UsageController : ControllerBase
 {
-    private readonly IUsageService _usageService;
+	private readonly IUsageService _usageService;
 
-    public UsageController(IUsageService usageService)
-    {
-        _usageService = usageService;
-    }
+	public UsageController(IUsageService usageService)
+	{
+		_usageService = usageService;
+	}
 
-    /// <summary>
-    /// Returns all usage records (proxy calculations applied by the service).
-    /// </summary>
-    [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<UsageRecord>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<UsageRecord>>> GetAll(CancellationToken cancellationToken)
-    {
-        var records = await _usageService.GetAllAsync(cancellationToken);
-
-        return Ok(records);
-    }
+	/// <summary>
+	/// Returns usage records and computed metrics.
+	/// </summary>
+	[HttpGet]
+	[ProducesResponseType(typeof(UsageResponseDto), StatusCodes.Status200OK)]
+	public async Task<ActionResult<UsageResponseDto>> GetUsageWithMetrics(CancellationToken cancellationToken)
+	{
+		var result = await _usageService.GetUsageWithMetricsAsync(cancellationToken);
+		return Ok(result);
+	}
 }

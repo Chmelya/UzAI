@@ -1,4 +1,4 @@
-import type { UsageRecord } from '../types/usageRecord';
+import type { UsageResponse } from '../types/usageRecord';
 
 const API_BASE = '/api';
 
@@ -13,7 +13,7 @@ export class UsageApiError extends Error {
 	}
 }
 
-export async function fetchUsageRecords(): Promise<UsageRecord[]> {
+export async function fetchUsageWithMetrics(): Promise<UsageResponse> {
 	let res: Response;
 	try {
 		res = await fetch(`${API_BASE}/Usage`);

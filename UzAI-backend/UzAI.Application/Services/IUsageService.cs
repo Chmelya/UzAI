@@ -1,8 +1,8 @@
-using UzAI.Domain.Models;
+using UzAI.Application.Models;
 
 namespace UzAI.Application.Services;
 
 public interface IUsageService
 {
-    Task<IReadOnlyList<UsageRecord>> GetAllAsync(CancellationToken cancellationToken = default);
+	Task<UsageResponseDto> GetUsageWithMetricsAsync(CancellationToken cancellationToken = default);
 }
