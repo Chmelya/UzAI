@@ -17,9 +17,11 @@ public class UsageService : IUsageService
     public async Task<IReadOnlyList<UsageRecord>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var query = _context.UsageRecords.AsNoTracking();
+
         var list = await query
             .OrderByDescending(r => r.Timestamp)
             .ToListAsync(cancellationToken);
+
         return list;
     }
 }

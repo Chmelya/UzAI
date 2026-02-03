@@ -23,6 +23,7 @@ public class UsageController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<UsageRecord>>> GetAll(CancellationToken cancellationToken)
     {
         var records = await _usageService.GetAllAsync(cancellationToken);
+
         return Ok(records);
     }
 }

@@ -11,12 +11,14 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
         return services;
     }
 
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IUsageService, UsageService>();
+
         return services;
     }
 
@@ -32,6 +34,7 @@ public static class ServiceCollectionExtensions
                 Version = "v1"
             });
         });
+
         return services;
     }
 }
