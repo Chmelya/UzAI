@@ -96,32 +96,36 @@ export default function UsageRecordsPage() {
 				<Table size='small' aria-label='Usage records table'>
 					<TableHead>
 						<TableRow>
-							<TableCell>User ID</TableCell>
 							<TableCell>Timestamp</TableCell>
-							<TableCell>Action</TableCell>
-							<TableCell align='right'>Quantity</TableCell>
+							<TableCell align='right'>Story pts</TableCell>
+							<TableCell align='right'>New story pts</TableCell>
+							<TableCell>AI used</TableCell>
+							<TableCell align='right'>Time spent</TableCell>
+							<TableCell align='right'>Time saved</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{loading ? (
 							<TableRow>
-								<TableCell colSpan={4} align='center' sx={{ py: 4 }}>
+								<TableCell colSpan={6} align='center' sx={{ py: 4 }}>
 									<CircularProgress size={24} />
 								</TableCell>
 							</TableRow>
 						) : records.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={4} align='center' sx={{ py: 4 }}>
+								<TableCell colSpan={6} align='center' sx={{ py: 4 }}>
 									No usage records found.
 								</TableCell>
 							</TableRow>
 						) : (
 							records.map((row) => (
 								<TableRow key={row.id} hover>
-									<TableCell>{row.userId}</TableCell>
 									<TableCell>{formatDate(row.timestamp)}</TableCell>
-									<TableCell>{row.action ?? '—'}</TableCell>
-									<TableCell align='right'>{row.quantity ?? '—'}</TableCell>
+									<TableCell align='right'>{row.storyPointsByte}</TableCell>
+									<TableCell align='right'>{row.newStoryPointsByte}</TableCell>
+									<TableCell>{row.isAiUsed ? 'Yes' : 'No'}</TableCell>
+									<TableCell align='right'>{row.timeSpent}</TableCell>
+									<TableCell align='right'>{row.timeSaved}</TableCell>
 								</TableRow>
 							))
 						)}

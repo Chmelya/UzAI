@@ -1,7 +1,9 @@
 export interface UsageRecord {
-	id: string;
-	userId: string;
+	id: number;
 	timestamp: string;
-	action: string | null;
-	quantity: number | null;
+	storyPointsByte: number;
+	newStoryPointsByte: number;
+	isAiUsed: boolean;
+	timeSpent: number;
+	timeSaved: number;
 }

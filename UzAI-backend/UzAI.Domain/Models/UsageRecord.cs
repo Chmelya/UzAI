@@ -6,17 +6,18 @@ namespace UzAI.Domain.Models;
 [Table("UsageRecords")]
 public class UsageRecord
 {
-    [Key]
-    public Guid Id { get; set; }
+	[Key]
+	public uint Id { get; set; }
 
-    [Required]
-    [MaxLength(450)]
-    public string UserId { get; set; } = null!;
+	public DateTime Timestamp { get; set; }
 
-    public DateTime Timestamp { get; set; }
+	public byte StoryPointsByte { get; set; }
 
-    [MaxLength(100)]
-    public string? Action { get; set; }
+	public byte NewStoryPointsByte { get; set; }
 
-    public int? Quantity { get; set; }
+	public bool IsAiUsed { get; set; }
+
+	public ushort TimeSpent { get; set; }
+
+	public ushort TimeSaved { get; set; }
 }
