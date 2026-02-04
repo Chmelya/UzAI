@@ -9,7 +9,6 @@ import {
 	TableSortLabel,
 	CircularProgress,
 } from '@mui/material';
-import { formatDate } from '../../utils/usageFormatters';
 import type { UsageRecord } from '../../types/usageRecord';
 import type { SortColumn, SortOrder } from '../../utils/usageTableUtils';
 
@@ -33,7 +32,8 @@ interface UsageRecordsTableProps {
 }
 
 const COLUMNS: { id: SortColumn; label: string; align?: 'right' }[] = [
-	{ id: 'timestamp', label: 'Timestamp' },
+	{ id: 'ticketNumber', label: 'Ticket' },
+	{ id: 'employeeName', label: 'Employee' },
 	{ id: 'storyPoints', label: 'Story pts', align: 'right' },
 	{ id: 'newStoryPoints', label: 'New story pts', align: 'right' },
 	{ id: 'isAiUsed', label: 'AI used' },
@@ -74,26 +74,27 @@ export function UsageRecordsTable({
 				<TableBody>
 					{loading ? (
 						<TableRow>
-							<TableCell colSpan={6} align='center' sx={{ py: 4 }}>
+							<TableCell colSpan={7} align='center' sx={{ py: 4 }}>
 								<CircularProgress size={24} />
 							</TableCell>
 						</TableRow>
 					) : records.length === 0 ? (
 						<TableRow>
-							<TableCell colSpan={6} align='center' sx={{ py: 4 }}>
+							<TableCell colSpan={7} align='center' sx={{ py: 4 }}>
 								No usage records found.
 							</TableCell>
 						</TableRow>
 					) : filteredRecords.length === 0 ? (
 						<TableRow>
-							<TableCell colSpan={6} align='center' sx={{ py: 4 }}>
+							<TableCell colSpan={7} align='center' sx={{ py: 4 }}>
 								No records match the current filters.
 							</TableCell>
 						</TableRow>
 					) : (
 						filteredRecords.map((row) => (
 							<TableRow key={row.id} hover>
-								<TableCell>{formatDate(row.timestamp)}</TableCell>
+								<TableCell>{row.ticketNumber}</TableCell>
+								<TableCell>{`${row.employeeName} ${row.employeeSurname}`}</TableCell>
 								<TableCell align='right'>{row.storyPoints}</TableCell>
 								<TableCell align='right'>{row.newStoryPoints}</TableCell>
 								<TableCell>{row.isAiUsed ? 'Yes' : 'No'}</TableCell>

@@ -2,7 +2,8 @@ import type { UsageRecord } from '../types/usageRecord';
 
 export type SortColumn = keyof Pick<
 	UsageRecord,
-	| 'timestamp'
+	| 'ticketNumber'
+	| 'employeeName'
 	| 'storyPoints'
 	| 'newStoryPoints'
 	| 'isAiUsed'
@@ -17,6 +18,11 @@ export function compareRecords(
 	orderBy: SortColumn,
 	order: SortOrder
 ): number {
+	if (orderBy === 'employeeName') {
+		const cmp = a.employeeName.localeCompare(b.employeeName) ||
+			a.employeeSurname.localeCompare(b.employeeSurname);
+		return order === 'asc' ? cmp : -cmp;
+	}
 	const aVal = a[orderBy];
 	const bVal = b[orderBy];
 	let cmp = 0;

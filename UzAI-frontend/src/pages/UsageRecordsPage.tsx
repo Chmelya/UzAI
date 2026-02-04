@@ -9,18 +9,19 @@ import {
 	Stack,
 	Collapse,
 	IconButton,
-} from '@mui/material';
+	} from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useUsageWithMetrics } from '../hooks/useUsageWithMetrics';
+import { useSprintsWithMetrics } from '../hooks/useUsageWithMetrics';
 import {
 	UsageTableFilters,
-	UsageRecordsTable,
 	UsageMetricsTable,
+	SprintsTable,
 } from '../components/usage';
 import { computeMetricsFromRecords } from '../utils/usageMetricsUtils';
 import {
-	compareRecords,
 	filterRecords,
 	initialFilterState,
 	type SortColumn,
@@ -29,26 +30,55 @@ import {
 } from '../utils/usageTableUtils';
 
 export default function UsageRecordsPage() {
-	const { records, loading, error, retry } = useUsageWithMetrics();
+	const { sprints, loading, error, retry } = useSprintsWithMetrics();
 	const [toastOpen, setToastOpen] = useState(false);
-	const [orderBy, setOrderBy] = useState<SortColumn>('timestamp');
+	const [orderBy, setOrderBy] = useState<SortColumn>('ticketNumber');
 	const [order, setOrder] = useState<SortOrder>('desc');
-	const [statsOpen, setStatsOpen] = useState(true);
-	const [filterOpen, setFilterOpen] = useState(true);
+	const [statsOpen, setStatsOpen] = useState(false);
+	const [filterOpen, setFilterOpen] = useState(false);
 	const [filter, setFilter] =
 		useState<UsageTableFilterState>(initialFilterState);
 
-	const sortedRecords = useMemo(
-		() => [...records].sort((a, b) => compareRecords(a, b, orderBy, order)),
-		[records, orderBy, order]
+	const years = useMemo(() => {
+		const set = new Set<string>();
+		sprints.forEach((s) => {
+			const y = s.startDate.slice(0, 4);
+			if (y) set.add(y);
+		});
+		return Array.from(set).sort((a, b) => b.localeCompare(a));
+	}, [sprints]);
+
+	const [selectedYear, setSelectedYear] = useState<string | null>(null);
+	const effectiveYear = selectedYear ?? years[0] ?? String(new Date().getFullYear());
+
+	const sprintsForYear = useMemo(
+		() =>
+			sprints.filter((s) => s.startDate.slice(0, 4) === effectiveYear),
+		[sprints, effectiveYear]
 	);
-	const filteredRecords = useMemo(
-		() => filterRecords(sortedRecords, filter),
-		[sortedRecords, filter]
+
+	const yearIndex = years.indexOf(effectiveYear);
+	const hasPrevYear = yearIndex >= 0 && yearIndex < years.length - 1;
+	const hasNextYear = yearIndex > 0;
+
+	const handlePrevYear = () => {
+		if (hasPrevYear) setSelectedYear(years[yearIndex + 1]);
+	};
+	const handleNextYear = () => {
+		if (hasNextYear) setSelectedYear(years[yearIndex - 1]);
+	};
+
+	const allRecords = useMemo(
+		() => sprintsForYear.flatMap((s) => s.records),
+		[sprintsForYear]
 	);
-	const metricsForRange = useMemo(
-		() => computeMetricsFromRecords(filteredRecords),
-		[filteredRecords]
+	const filteredAllRecords = useMemo(
+		() => filterRecords(allRecords, filter),
+		[allRecords, filter]
+	);
+	const totalMetricsForRange = useMemo(
+		() => computeMetricsFromRecords(filteredAllRecords),
+		[filteredAllRecords]
 	);
 
 	const handleSort = (column: SortColumn) => {
@@ -75,7 +105,7 @@ export default function UsageRecordsPage() {
 			)}
 
 			<Typography variant='h5' component='h1' gutterBottom>
-				Usage Records
+				Usage by Sprints
 			</Typography>
 
 			{!loading && (
@@ -109,12 +139,12 @@ export default function UsageRecordsPage() {
 							)}
 						</IconButton>
 						<Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
-							Statistics
+							Total statistics
 						</Typography>
 					</Stack>
 					<Collapse in={statsOpen}>
 						<Box sx={{ px: 0, pb: 0 }}>
-							<UsageMetricsTable metrics={metricsForRange} />
+							<UsageMetricsTable metrics={totalMetricsForRange} />
 						</Box>
 					</Collapse>
 				</Paper>
@@ -128,9 +158,45 @@ export default function UsageRecordsPage() {
 				onClear={() => setFilter(initialFilterState)}
 			/>
 
-			<UsageRecordsTable
-				records={records}
-				filteredRecords={filteredRecords}
+			{!loading && years.length > 0 && (
+				<Stack
+					direction='row'
+					alignItems='center'
+					justifyContent='flex-end'
+					gap={0.5}
+					sx={{ mb: 1, px: 0 }}
+				>
+					<Typography variant='body2' color='text.secondary' sx={{ mr: 1 }}>
+						Year
+					</Typography>
+					<IconButton
+						size='small'
+						onClick={handlePrevYear}
+						disabled={!hasPrevYear}
+						aria-label='Previous year'
+					>
+						<ChevronLeftIcon fontSize='small' />
+					</IconButton>
+					<Typography variant='body2' sx={{ minWidth: 48, textAlign: 'center' }}>
+						{effectiveYear}
+					</Typography>
+					<IconButton
+						size='small'
+						onClick={handleNextYear}
+						disabled={!hasNextYear}
+						aria-label='Next year'
+					>
+						<ChevronRightIcon fontSize='small' />
+					</IconButton>
+					<Typography variant='caption' color='text.secondary' sx={{ ml: 0.5 }}>
+						{yearIndex + 1} of {years.length}
+					</Typography>
+				</Stack>
+			)}
+
+			<SprintsTable
+				sprints={sprintsForYear}
+				filter={filter}
 				loading={loading}
 				orderBy={orderBy}
 				order={order}

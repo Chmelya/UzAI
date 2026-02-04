@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { fetchUsageWithMetrics } from '../api/usageApi';
-import { getMockUsageResponse } from '../data/mockUsageData';
-import type { UsageRecord, UsageMetrics } from '../types/usageRecord';
+import {
+	getMockUsageResponse,
+	getMockSprintsWithRecords,
+} from '../data/mockUsageData';
+import type { UsageRecord, UsageMetrics, Sprint } from '../types/usageRecord';
+import { computeMetricsFromRecords } from '../utils/usageMetricsUtils';
 
 export function useUsageWithMetrics() {
 	const [records, setRecords] = useState<UsageRecord[]>([]);
@@ -30,4 +34,35 @@ export function useUsageWithMetrics() {
 	}, []);
 
 	return { records, metrics, loading, error, retry: load };
+}
+
+export function useSprintsWithMetrics() {
+	const [sprints, setSprints] = useState<Sprint[]>([]);
+	const [totalMetrics, setTotalMetrics] = useState<ReturnType<
+		typeof computeMetricsFromRecords
+	> | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	const load = () => {
+		setError(null);
+		setLoading(true);
+		// When backend has sprint API, fetch here; for now use mock
+		Promise.resolve()
+			.then(() => {
+				const mock = getMockSprintsWithRecords();
+				setSprints(mock.sprints);
+				setTotalMetrics(mock.totalMetrics);
+			})
+			.catch((err) => {
+				setError(err instanceof Error ? err.message : 'Failed to load sprints');
+			})
+			.finally(() => setLoading(false));
+	};
+
+	useEffect(() => {
+		load();
+	}, []);
+
+	return { sprints, totalMetrics, loading, error, retry: load };
 }

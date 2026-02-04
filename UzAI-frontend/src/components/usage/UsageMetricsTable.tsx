@@ -28,14 +28,6 @@ const ROWS: {
 			)}%)`,
 	},
 	{
-		key: 'totalTimeSavedHoursWithoutAi',
-		label: 'Total savings (without AI)',
-		format: (m) =>
-			`${formatMetric(m.totalTimeSavedHoursWithoutAi)} h (${formatMetric(
-				m.totalTimeSavedPercentWithoutAi
-			)}%)`,
-	},
-	{
 		key: 'totalTimeSavedHours',
 		label: 'Total savings',
 		format: (m) =>

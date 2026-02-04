@@ -3,13 +3,14 @@ import type { UsageResponse } from '../types/usageRecord';
 const API_BASE = '/api';
 
 export class UsageApiError extends Error {
-	constructor(
-		message: string,
-		public readonly status: number,
-		public readonly detail?: string
-	) {
+	readonly status: number;
+	readonly detail: string | undefined;
+
+	constructor(message: string, status: number, detail?: string) {
 		super(message);
 		this.name = 'UsageApiError';
+		this.status = status;
+		this.detail = detail;
 	}
 }
 
