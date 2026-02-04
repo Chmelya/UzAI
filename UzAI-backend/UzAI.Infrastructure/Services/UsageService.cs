@@ -35,31 +35,37 @@ public class UsageService : IUsageService
 				TotalTimeSavedHours = 0,
 				TotalTimeSavedPercent = 0,
 				TasksWithAiPercent = 0,
-				AvgRelativeSavingsWithAiPercent = 0,
+				AvgRelativeSavingsOnAiTaskOnlySavesPercent = 0,
+				AvgRelativeIncreaseOnAiTaskOnlyOverrunsPercent = 0,
+				AvgNetRelativeImpactOnAiTaskPercent = 0,
 				EstimationErrorPercent = 0
 			};
 
 		double totalSaved = records.Sum(r => r.TimeSaved);
 		double totalSpent = records.Sum(r => r.TimeSpent);
 		double totalWouldHaveBeen = totalSpent + totalSaved;
+		// When totalWouldHaveBeen <= 0 (e.g. large overruns), percent is not meaningful
 		double totalTimeSavedPercent = totalWouldHaveBeen > 0 ? totalSaved / totalWouldHaveBeen * 100.0 : 0;
 
 		int withAi = records.Count(r => r.IsAiUsed);
 		double tasksWithAiPercent = (double)withAi / records.Count * 100.0;
 
 		var withAiRecords = records.Where(r => r.IsAiUsed).ToList();
-		double avgRelativeSavingsWithAiPercent = 0;
-		if (withAiRecords.Count > 0)
-		{
-			double sumPercent = 0;
-			foreach (var r in withAiRecords)
-			{
-				double totalTime = r.TimeSpent + r.TimeSaved;
-				if (totalTime > 0)
-					sumPercent += (double)r.TimeSaved / totalTime * 100.0;
-			}
-			avgRelativeSavingsWithAiPercent = sumPercent / withAiRecords.Count;
-		}
+		var withSaves = withAiRecords.Where(r => r.TimeSaved > 0).ToList();
+		var withOverruns = withAiRecords.Where(r => r.TimeSaved < 0).ToList();
+
+		double avgRelativeSavingsOnlySaves = withSaves.Count > 0
+			? withSaves.Average(r => (double)r.TimeSaved / (r.TimeSpent + r.TimeSaved) * 100.0)
+			: 0;
+
+		double avgRelativeIncreaseOnlyOverruns = withOverruns.Count > 0
+			? withOverruns.Average(r => -(double)r.TimeSaved / r.TimeSpent * 100.0)
+			: 0;
+
+		var withValidTotal = withAiRecords.Where(r => r.TimeSpent + r.TimeSaved > 0).ToList();
+		double avgNetRelativeImpact = withValidTotal.Count > 0
+			? withValidTotal.Average(r => (double)r.TimeSaved / (r.TimeSpent + r.TimeSaved) * 100.0)
+			: 0;
 
 		// Estimation error: MAPE of StoryPoints vs actual time (scale story points to time by global ratio)
 		double estimationErrorPercent = 0;
@@ -88,7 +94,9 @@ public class UsageService : IUsageService
 			TotalTimeSavedHours = totalTimeSavedHours,
 			TotalTimeSavedPercent = totalTimeSavedPercent,
 			TasksWithAiPercent = tasksWithAiPercent,
-			AvgRelativeSavingsWithAiPercent = avgRelativeSavingsWithAiPercent,
+			AvgRelativeSavingsOnAiTaskOnlySavesPercent = avgRelativeSavingsOnlySaves,
+			AvgRelativeIncreaseOnAiTaskOnlyOverrunsPercent = avgRelativeIncreaseOnlyOverruns,
+			AvgNetRelativeImpactOnAiTaskPercent = avgNetRelativeImpact,
 			EstimationErrorPercent = estimationErrorPercent
 		};
 	}

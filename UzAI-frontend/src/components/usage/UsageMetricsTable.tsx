@@ -28,9 +28,21 @@ const ROWS: {
 		format: (m) => `${formatMetric(m.tasksWithAiPercent)}%`,
 	},
 	{
-		key: 'avgRelativeSavingsWithAiPercent',
-		label: 'Avg. relative savings on AI task',
-		format: (m) => `${formatMetric(m.avgRelativeSavingsWithAiPercent)}%`,
+		key: 'avgRelativeSavingsOnAiTaskOnlySavesPercent',
+		label: 'Avg. relative savings on AI task (saves only)',
+		format: (m) =>
+			`${formatMetric(m.avgRelativeSavingsOnAiTaskOnlySavesPercent)}%`,
+	},
+	{
+		key: 'avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent',
+		label: 'Avg. relative increase in time on AI task (overruns only)',
+		format: (m) =>
+			`${formatMetric(m.avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent)}%`,
+	},
+	{
+		key: 'avgNetRelativeImpactOnAiTaskPercent',
+		label: 'Avg. net relative impact on AI task (savings & overruns)',
+		format: (m) => `${formatMetric(m.avgNetRelativeImpactOnAiTaskPercent)}%`,
 	},
 	{
 		key: 'estimationErrorPercent',

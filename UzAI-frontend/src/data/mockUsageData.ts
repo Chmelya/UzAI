@@ -34,7 +34,10 @@ export function generateMockUsageRecords(): UsageRecord[] {
 		const newStoryPoints = STORY_POINTS_VALUES[newIdx];
 		const isAiUsed = randomBool(0.6);
 		const timeSpent = randomInt(15, 240);
-		const timeSaved = isAiUsed ? randomInt(5, Math.min(120, timeSpent)) : 0;
+		// Time saved can be negative (overrun); with AI often positive, without AI often zero or negative
+		const timeSaved = isAiUsed
+			? randomInt(-15, Math.min(120, timeSpent))
+			: randomInt(-45, 5);
 
 		records.push({
 			id: i + 1,

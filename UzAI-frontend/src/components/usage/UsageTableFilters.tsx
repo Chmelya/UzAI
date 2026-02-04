@@ -224,7 +224,6 @@ export function UsageTableFilters({
 							label='Time saved'
 							placeholder='min'
 							type='number'
-							inputProps={{ min: 0 }}
 							value={filter.timeSavedMin}
 							onChange={(e) =>
 								onFilterChange({ ...filter, timeSavedMin: e.target.value })
@@ -236,7 +235,6 @@ export function UsageTableFilters({
 							size='small'
 							placeholder='max'
 							type='number'
-							inputProps={{ min: 0 }}
 							value={filter.timeSavedMax}
 							onChange={(e) =>
 								onFilterChange({ ...filter, timeSavedMax: e.target.value })

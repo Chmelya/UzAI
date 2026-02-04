@@ -10,7 +10,9 @@ export function computeMetricsFromRecords(
 			totalTimeSavedHours: 0,
 			totalTimeSavedPercent: 0,
 			tasksWithAiPercent: 0,
-			avgRelativeSavingsWithAiPercent: 0,
+			avgRelativeSavingsOnAiTaskOnlySavesPercent: 0,
+			avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent: 0,
+			avgNetRelativeImpactOnAiTaskPercent: 0,
 			estimationErrorPercent: 0,
 		};
 	}
@@ -24,14 +26,33 @@ export function computeMetricsFromRecords(
 	const withAi = records.filter((r) => r.isAiUsed);
 	const tasksWithAiPercent = (withAi.length / records.length) * 100;
 
-	let avgRelativeSavingsWithAiPercent = 0;
-	if (withAi.length > 0) {
-		const sumPercent = withAi.reduce((s, r) => {
-			const total = r.timeSpent + r.timeSaved;
-			return s + (total > 0 ? (r.timeSaved / total) * 100 : 0);
-		}, 0);
-		avgRelativeSavingsWithAiPercent = sumPercent / withAi.length;
-	}
+	const withSaves = withAi.filter((r) => r.timeSaved > 0);
+	const withOverruns = withAi.filter((r) => r.timeSaved < 0);
+	const withValidTotal = withAi.filter((r) => r.timeSpent + r.timeSaved > 0);
+
+	const avgRelativeSavingsOnAiTaskOnlySavesPercent =
+		withSaves.length > 0
+			? withSaves.reduce(
+					(s, r) => s + (r.timeSaved / (r.timeSpent + r.timeSaved)) * 100,
+					0
+			  ) / withSaves.length
+			: 0;
+
+	const avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent =
+		withOverruns.length > 0
+			? withOverruns.reduce(
+					(s, r) => s + (-r.timeSaved / r.timeSpent) * 100,
+					0
+			  ) / withOverruns.length
+			: 0;
+
+	const avgNetRelativeImpactOnAiTaskPercent =
+		withValidTotal.length > 0
+			? withValidTotal.reduce(
+					(s, r) => s + (r.timeSaved / (r.timeSpent + r.timeSaved)) * 100,
+					0
+			  ) / withValidTotal.length
+			: 0;
 
 	const sumStoryPoints = records.reduce((s, r) => s + r.storyPoints, 0);
 	let estimationErrorPercent = 0;
@@ -53,7 +74,9 @@ export function computeMetricsFromRecords(
 		totalTimeSavedHours: totalSaved / 60,
 		totalTimeSavedPercent,
 		tasksWithAiPercent,
-		avgRelativeSavingsWithAiPercent,
+		avgRelativeSavingsOnAiTaskOnlySavesPercent,
+		avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent,
+		avgNetRelativeImpactOnAiTaskPercent,
 		estimationErrorPercent,
 	};
 }

@@ -17,7 +17,9 @@ export interface UsageMetrics {
 	totalTimeSavedHours: number;
 	totalTimeSavedPercent: number;
 	tasksWithAiPercent: number;
-	avgRelativeSavingsWithAiPercent: number;
+	avgRelativeSavingsOnAiTaskOnlySavesPercent: number;
+	avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent: number;
+	avgNetRelativeImpactOnAiTaskPercent: number;
 	estimationErrorPercent: number;
 }
 

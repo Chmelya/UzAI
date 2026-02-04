@@ -21,5 +21,6 @@ public class UsageRecord
 
 	public ushort TimeSpent { get; set; }
 
-	public ushort TimeSaved { get; set; }
+	/// <summary>Time saved (minutes). Can be negative when task took longer than estimated.</summary>
+	public short TimeSaved { get; set; }
 }

@@ -14,8 +14,14 @@ public class UsageMetricsDto
 	/// <summary>Percentage of tasks (records) where AI was used.</summary>
 	public double TasksWithAiPercent { get; init; }
 
-	/// <summary>Average relative time saved on tasks where AI was used (saved / (spent + saved) * 100).</summary>
-	public double AvgRelativeSavingsWithAiPercent { get; init; }
+	/// <summary>Average relative savings on AI tasks that had time saved (timeSaved &gt; 0): saved / (spent + saved) * 100.</summary>
+	public double AvgRelativeSavingsOnAiTaskOnlySavesPercent { get; init; }
+
+	/// <summary>Average relative increase in time on AI tasks that had overruns (timeSaved &lt; 0): |timeSaved| / timeSpent * 100.</summary>
+	public double AvgRelativeIncreaseOnAiTaskOnlyOverrunsPercent { get; init; }
+
+	/// <summary>Average net relative impact on AI tasks (savings and overruns): saved / (spent + saved) * 100 per task, averaged.</summary>
+	public double AvgNetRelativeImpactOnAiTaskPercent { get; init; }
 
 	/// <summary>Estimation error: average absolute percentage error of story point estimate vs actual time (TimeSpent).</summary>
 	public double EstimationErrorPercent { get; init; }
