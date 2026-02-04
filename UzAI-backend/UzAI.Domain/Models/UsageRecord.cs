@@ -11,6 +11,12 @@ public class UsageRecord
 
 	public DateTime Timestamp { get; set; }
 
+	public uint TicketId { get; set; }
+	public Ticket Ticket { get; set; } = null!;
+
+	public uint EmployeeId { get; set; }
+	public Employee Employee { get; set; } = null!;
+
 	[Column("StoryPointsByte")]
 	public StoryPoints StoryPoints { get; set; }
 
