@@ -13,6 +13,16 @@ import { formatDate } from '../../utils/usageFormatters';
 import type { UsageRecord } from '../../types/usageRecord';
 import type { SortColumn, SortOrder } from '../../utils/usageTableUtils';
 
+function formatMinutesAsHoursAndMinutes(minutes: number): string {
+	const sign = minutes < 0 ? '-' : '';
+	const total = Math.abs(Math.round(minutes));
+	const h = Math.floor(total / 60);
+	const m = total % 60;
+	if (h === 0) return `${sign}${m} min`;
+	if (m === 0) return `${sign}${h} h`;
+	return `${sign}${h} h ${m} min`;
+}
+
 interface UsageRecordsTableProps {
 	records: UsageRecord[];
 	filteredRecords: UsageRecord[];
@@ -87,8 +97,12 @@ export function UsageRecordsTable({
 								<TableCell align='right'>{row.storyPoints}</TableCell>
 								<TableCell align='right'>{row.newStoryPoints}</TableCell>
 								<TableCell>{row.isAiUsed ? 'Yes' : 'No'}</TableCell>
-								<TableCell align='right'>{row.timeSpent}</TableCell>
-								<TableCell align='right'>{row.timeSaved}</TableCell>
+								<TableCell align='right'>
+									{formatMinutesAsHoursAndMinutes(row.timeSpent)}
+								</TableCell>
+								<TableCell align='right'>
+									{formatMinutesAsHoursAndMinutes(row.timeSaved)}
+								</TableCell>
 							</TableRow>
 						))
 					)}

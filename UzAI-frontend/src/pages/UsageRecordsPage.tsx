@@ -1,5 +1,17 @@
 import { useMemo, useState } from 'react';
-import { Box, Typography, Alert, Button, Snackbar } from '@mui/material';
+import {
+	Box,
+	Typography,
+	Alert,
+	Button,
+	Snackbar,
+	Paper,
+	Stack,
+	Collapse,
+	IconButton,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useUsageWithMetrics } from '../hooks/useUsageWithMetrics';
 import {
 	UsageTableFilters,
@@ -21,6 +33,7 @@ export default function UsageRecordsPage() {
 	const [toastOpen, setToastOpen] = useState(false);
 	const [orderBy, setOrderBy] = useState<SortColumn>('timestamp');
 	const [order, setOrder] = useState<SortOrder>('desc');
+	const [statsOpen, setStatsOpen] = useState(true);
 	const [filterOpen, setFilterOpen] = useState(true);
 	const [filter, setFilter] =
 		useState<UsageTableFilterState>(initialFilterState);
@@ -66,9 +79,45 @@ export default function UsageRecordsPage() {
 			</Typography>
 
 			{!loading && (
-				<Box sx={{ mb: 2 }}>
-					<UsageMetricsTable metrics={metricsForRange} />
-				</Box>
+				<Paper variant='outlined' sx={{ mb: 2, overflow: 'hidden' }}>
+					<Stack
+						direction='row'
+						alignItems='center'
+						onClick={() => setStatsOpen((o) => !o)}
+						sx={{
+							px: 1.5,
+							py: 0.75,
+							cursor: 'pointer',
+							'&:hover': { bgcolor: 'action.hover' },
+						}}
+					>
+						<IconButton
+							size='small'
+							onClick={(e) => {
+								e.stopPropagation();
+								setStatsOpen((o) => !o);
+							}}
+							aria-label={
+								statsOpen ? 'Collapse statistics' : 'Expand statistics'
+							}
+							sx={{ p: 0.5 }}
+						>
+							{statsOpen ? (
+								<ExpandLessIcon fontSize='small' />
+							) : (
+								<ExpandMoreIcon fontSize='small' />
+							)}
+						</IconButton>
+						<Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
+							Statistics
+						</Typography>
+					</Stack>
+					<Collapse in={statsOpen}>
+						<Box sx={{ px: 0, pb: 0 }}>
+							<UsageMetricsTable metrics={metricsForRange} />
+						</Box>
+					</Collapse>
+				</Paper>
 			)}
 
 			<UsageTableFilters

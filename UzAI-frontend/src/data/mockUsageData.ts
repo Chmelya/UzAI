@@ -18,6 +18,19 @@ function isoDate(d: Date): string {
 	return d.toISOString();
 }
 
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_STORY_POINT = 8;
+const VARIANCE_HOURS = 3;
+const VARIANCE_MINUTES = VARIANCE_HOURS * MINUTES_PER_HOUR; // ±3 hours
+const TIME_SAVED_MAX_NEGATIVE_HOURS = 2.5; // overrun cap
+const TIME_SAVED_MAX_POSITIVE_HOURS = 6;
+const TIME_SAVED_MIN_MINUTES = -Math.round(
+	TIME_SAVED_MAX_NEGATIVE_HOURS * MINUTES_PER_HOUR
+); // -150
+const TIME_SAVED_MAX_MINUTES = Math.round(
+	TIME_SAVED_MAX_POSITIVE_HOURS * MINUTES_PER_HOUR
+); // 360
+
 /** Generates 50 mock usage records with varied, realistic-looking data. */
 export function generateMockUsageRecords(): UsageRecord[] {
 	const records: UsageRecord[] = [];
@@ -33,11 +46,15 @@ export function generateMockUsageRecords(): UsageRecord[] {
 		);
 		const newStoryPoints = STORY_POINTS_VALUES[newIdx];
 		const isAiUsed = randomBool(0.6);
-		const timeSpent = randomInt(15, 240);
-		// Time saved can be negative (overrun); with AI often positive, without AI often zero or negative
-		const timeSaved = isAiUsed
-			? randomInt(-15, Math.min(120, timeSpent))
-			: randomInt(-45, 5);
+		// Time spent: 8 hours ± 3 hours per new story point
+		const baseMinutes =
+			HOURS_PER_STORY_POINT * MINUTES_PER_HOUR * newStoryPoints;
+		const timeSpent = Math.max(
+			1,
+			baseMinutes + randomInt(-VARIANCE_MINUTES, VARIANCE_MINUTES)
+		);
+		// Time saved: negative up to 2.5 h (overrun), positive up to 6 h
+		const timeSaved = randomInt(TIME_SAVED_MIN_MINUTES, TIME_SAVED_MAX_MINUTES);
 
 		records.push({
 			id: i + 1,

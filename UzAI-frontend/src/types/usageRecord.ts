@@ -13,14 +13,25 @@ export interface UsageRecord {
 }
 
 export interface UsageMetrics {
+	totalTimeSpent: number;
+	totalTimeSpentHours: number;
 	totalTimeSaved: number;
 	totalTimeSavedHours: number;
+	totalTimeSavedWithAi: number;
+	totalTimeSavedHoursWithAi: number;
+	totalTimeSavedWithoutAi: number;
+	totalTimeSavedHoursWithoutAi: number;
+	totalTimeSavedPercentWithAi: number;
+	totalTimeSavedPercentWithoutAi: number;
 	totalTimeSavedPercent: number;
 	tasksWithAiPercent: number;
 	avgRelativeSavingsOnAiTaskOnlySavesPercent: number;
 	avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent: number;
 	avgNetRelativeImpactOnAiTaskPercent: number;
-	estimationErrorPercent: number;
+	estimationErrorUnderPercentWithAi: number;
+	estimationErrorUnderPercentWithoutAi: number;
+	estimationErrorOverPercentWithAi: number;
+	estimationErrorOverPercentWithoutAi: number;
 }
 
 export interface UsageResponse {

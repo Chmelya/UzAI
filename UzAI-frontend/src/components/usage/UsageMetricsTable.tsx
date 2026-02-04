@@ -15,6 +15,27 @@ const ROWS: {
 	format: (m: UsageMetrics) => string;
 }[] = [
 	{
+		key: 'totalTimeSpentHours',
+		label: 'Total time spent',
+		format: (m) => `${formatMetric(m.totalTimeSpentHours)} h`,
+	},
+	{
+		key: 'totalTimeSavedHoursWithAi',
+		label: 'Total savings (with AI)',
+		format: (m) =>
+			`${formatMetric(m.totalTimeSavedHoursWithAi)} h (${formatMetric(
+				m.totalTimeSavedPercentWithAi
+			)}%)`,
+	},
+	{
+		key: 'totalTimeSavedHoursWithoutAi',
+		label: 'Total savings (without AI)',
+		format: (m) =>
+			`${formatMetric(m.totalTimeSavedHoursWithoutAi)} h (${formatMetric(
+				m.totalTimeSavedPercentWithoutAi
+			)}%)`,
+	},
+	{
 		key: 'totalTimeSavedHours',
 		label: 'Total savings',
 		format: (m) =>
@@ -45,9 +66,24 @@ const ROWS: {
 		format: (m) => `${formatMetric(m.avgNetRelativeImpactOnAiTaskPercent)}%`,
 	},
 	{
-		key: 'estimationErrorPercent',
-		label: 'Estimation accuracy (error)',
-		format: (m) => `±${formatMetric(m.estimationErrorPercent)}%`,
+		key: 'estimationErrorUnderPercentWithAi',
+		label: 'Est. error (took less) — with AI',
+		format: (m) => `${formatMetric(m.estimationErrorUnderPercentWithAi)}%`,
+	},
+	{
+		key: 'estimationErrorUnderPercentWithoutAi',
+		label: 'Est. error (took less) — without AI',
+		format: (m) => `${formatMetric(m.estimationErrorUnderPercentWithoutAi)}%`,
+	},
+	{
+		key: 'estimationErrorOverPercentWithAi',
+		label: 'Est. error (took more) — with AI',
+		format: (m) => `${formatMetric(m.estimationErrorOverPercentWithAi)}%`,
+	},
+	{
+		key: 'estimationErrorOverPercentWithoutAi',
+		label: 'Est. error (took more) — without AI',
+		format: (m) => `${formatMetric(m.estimationErrorOverPercentWithoutAi)}%`,
 	},
 ];
 
