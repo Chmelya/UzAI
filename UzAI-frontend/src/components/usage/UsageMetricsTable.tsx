@@ -57,26 +57,6 @@ const ROWS: {
 		label: 'Avg. net relative impact on AI task (savings & overruns)',
 		format: (m) => `${formatMetric(m.avgNetRelativeImpactOnAiTaskPercent)}%`,
 	},
-	{
-		key: 'estimationErrorUnderPercentWithAi',
-		label: 'Est. error (took less) — with AI',
-		format: (m) => `${formatMetric(m.estimationErrorUnderPercentWithAi)}%`,
-	},
-	{
-		key: 'estimationErrorUnderPercentWithoutAi',
-		label: 'Est. error (took less) — without AI',
-		format: (m) => `${formatMetric(m.estimationErrorUnderPercentWithoutAi)}%`,
-	},
-	{
-		key: 'estimationErrorOverPercentWithAi',
-		label: 'Est. error (took more) — with AI',
-		format: (m) => `${formatMetric(m.estimationErrorOverPercentWithAi)}%`,
-	},
-	{
-		key: 'estimationErrorOverPercentWithoutAi',
-		label: 'Est. error (took more) — without AI',
-		format: (m) => `${formatMetric(m.estimationErrorOverPercentWithoutAi)}%`,
-	},
 ];
 
 interface UsageMetricsTableProps {

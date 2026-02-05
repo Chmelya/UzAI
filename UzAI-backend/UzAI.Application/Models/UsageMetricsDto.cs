@@ -46,16 +46,4 @@ public class UsageMetricsDto
 
 	/// <summary>Average net relative impact on AI tasks (savings and overruns): saved / (spent + saved) * 100 per task, averaged.</summary>
 	public double AvgNetRelativeImpactOnAiTaskPercent { get; init; }
-
-	/// <summary>Avg estimation error when task took less than predicted (under), AI tasks only: (predicted - actual) / actual * 100.</summary>
-	public double EstimationErrorUnderPercentWithAi { get; init; }
-
-	/// <summary>Avg estimation error when task took less than predicted (under), non-AI tasks only.</summary>
-	public double EstimationErrorUnderPercentWithoutAi { get; init; }
-
-	/// <summary>Avg estimation error when task took more than predicted (over), AI tasks only: (actual - predicted) / actual * 100.</summary>
-	public double EstimationErrorOverPercentWithAi { get; init; }
-
-	/// <summary>Avg estimation error when task took more than predicted (over), non-AI tasks only.</summary>
-	public double EstimationErrorOverPercentWithoutAi { get; init; }
 }

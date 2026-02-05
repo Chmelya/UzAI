@@ -6,6 +6,8 @@ export interface UsageRecord {
 	id: number;
 	/** Ticket number (e.g. 12345). */
 	ticketNumber: string;
+	/** High-level ticket category (matches backend TicketCategory enum). */
+	category: number;
 	employeeName: string;
 	employeeSurname: string;
 	timestamp: string;
@@ -32,10 +34,6 @@ export interface UsageMetrics {
 	avgRelativeSavingsOnAiTaskOnlySavesPercent: number;
 	avgRelativeIncreaseOnAiTaskOnlyOverrunsPercent: number;
 	avgNetRelativeImpactOnAiTaskPercent: number;
-	estimationErrorUnderPercentWithAi: number;
-	estimationErrorUnderPercentWithoutAi: number;
-	estimationErrorOverPercentWithAi: number;
-	estimationErrorOverPercentWithoutAi: number;
 }
 
 export interface UsageResponse {

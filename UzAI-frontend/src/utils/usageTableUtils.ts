@@ -3,6 +3,7 @@ import type { UsageRecord } from '../types/usageRecord';
 export type SortColumn = keyof Pick<
 	UsageRecord,
 	| 'ticketNumber'
+	| 'category'
 	| 'employeeName'
 	| 'storyPoints'
 	| 'newStoryPoints'

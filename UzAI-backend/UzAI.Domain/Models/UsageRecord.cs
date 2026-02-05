@@ -17,6 +17,9 @@ public class UsageRecord
 	public uint EmployeeId { get; set; }
 	public Employee Employee { get; set; } = null!;
 
+	[Column("Category")]
+	public TicketCategory Category { get; set; }
+
 	[Column("StoryPointsByte")]
 	public StoryPoints StoryPoints { get; set; }
 

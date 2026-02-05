@@ -11,6 +11,11 @@ public class Ticket
 	[MaxLength(32)]
 	public string Number { get; set; } = null!;
 
+	/// <summary>
+	/// High-level category of the ticket (e.g. bug, feature).
+	/// </summary>
+	public TicketCategory Category { get; set; }
+
 	public uint EmployeeId { get; set; }
 	public Employee Employee { get; set; } = null!;
 

@@ -62,6 +62,8 @@ function getSprintStart(sprintIndex: number): Date {
 	return d;
 }
 
+const MOCK_CATEGORIES = [1, 2, 3, 4, 5] as const; // mirrors TicketCategory enum values
+
 /** Generates one usage record with a given timestamp. */
 function generateRecord(
 	id: number,
@@ -85,9 +87,11 @@ function generateRecord(
 		: 0;
 	const ticketNumber = String(id).padStart(5, '0');
 	const employee = MOCK_EMPLOYEES[randomInt(0, MOCK_EMPLOYEES.length - 1)];
+	const category = MOCK_CATEGORIES[randomInt(0, MOCK_CATEGORIES.length - 1)];
 	return {
 		id,
 		ticketNumber,
+		category,
 		employeeName: employee.name,
 		employeeSurname: employee.surname,
 		timestamp: isoDate(timestamp),

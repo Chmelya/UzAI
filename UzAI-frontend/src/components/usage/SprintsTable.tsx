@@ -10,6 +10,7 @@ import {
 	Collapse,
 	Box,
 	CircularProgress,
+	Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -25,7 +26,11 @@ import {
 } from '../../utils/usageTableUtils';
 import { computeMetricsFromRecords } from '../../utils/usageMetricsUtils';
 import { UsageMetricsTable } from './UsageMetricsTable';
-import { UsageRecordsTable } from './UsageRecordsTable';
+import {
+	UsageRecordsTable,
+	CATEGORY_LABELS,
+	CATEGORY_ORDER,
+} from './UsageRecordsTable';
 import { useState, useMemo } from 'react';
 
 interface SprintsTableProps {
@@ -152,6 +157,18 @@ function SprintRow({
 		() => computeMetricsFromRecords(filteredRecords),
 		[filteredRecords]
 	);
+	const recordsByCategory = useMemo(() => {
+		const map = new Map<number, typeof sortedRecords>();
+		for (const catId of CATEGORY_ORDER) {
+			map.set(catId, []);
+		}
+		for (const r of sortedRecords) {
+			const list = map.get(r.category) ?? [];
+			list.push(r);
+			map.set(r.category, list);
+		}
+		return map;
+	}, [sortedRecords]);
 
 	return (
 		<>
@@ -209,14 +226,30 @@ function SprintRow({
 							<Box sx={{ mb: 2 }}>
 								<UsageMetricsTable metrics={sprintMetrics} />
 							</Box>
-							<UsageRecordsTable
-								records={sprint.records}
-								filteredRecords={sortedRecords}
-								loading={false}
-								orderBy={orderBy}
-								order={order}
-								onSort={onSort}
-							/>
+							{CATEGORY_ORDER.map((categoryId) => {
+								const categoryRecords = recordsByCategory.get(categoryId) ?? [];
+								const label = CATEGORY_LABELS[categoryId] ?? 'Other';
+								return (
+									<Box key={categoryId} sx={{ mb: 3 }}>
+										<Typography
+											variant='subtitle2'
+											sx={{ fontWeight: 600, mb: 1 }}
+										>
+											{label}
+										</Typography>
+										<UsageRecordsTable
+											records={sprint.records}
+											filteredRecords={categoryRecords}
+											loading={false}
+											orderBy={orderBy}
+											order={order}
+											onSort={onSort}
+											hideCategoryColumn
+											emptyMessage='No records in this category.'
+										/>
+									</Box>
+								);
+							})}
 						</Box>
 					</Collapse>
 				</TableCell>

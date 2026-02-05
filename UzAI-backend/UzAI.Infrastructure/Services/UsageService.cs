@@ -45,11 +45,7 @@ public class UsageService : IUsageService
 				TasksWithAiPercent = 0,
 				AvgRelativeSavingsOnAiTaskOnlySavesPercent = 0,
 				AvgRelativeIncreaseOnAiTaskOnlyOverrunsPercent = 0,
-				AvgNetRelativeImpactOnAiTaskPercent = 0,
-				EstimationErrorUnderPercentWithAi = 0,
-				EstimationErrorUnderPercentWithoutAi = 0,
-				EstimationErrorOverPercentWithAi = 0,
-				EstimationErrorOverPercentWithoutAi = 0
+				AvgNetRelativeImpactOnAiTaskPercent = 0
 			};
 
 		double totalSaved = records.Sum(r => r.TimeSaved);
@@ -84,40 +80,6 @@ public class UsageService : IUsageService
 			? withValidTotal.Average(r => (double)r.TimeSaved / (r.TimeSpent + r.TimeSaved) * 100.0)
 			: 0;
 
-		// Estimation error: under (took less) vs over (took more), each split by AI usage
-		double estimationErrorUnderWithAi = 0, estimationErrorUnderWithoutAi = 0;
-		double estimationErrorOverWithAi = 0, estimationErrorOverWithoutAi = 0;
-		double sumStoryPoints = records.Sum(r => (byte)r.StoryPoints);
-		if (sumStoryPoints > 0 && totalSpent > 0)
-		{
-			double ratio = totalSpent / sumStoryPoints;
-			var underWithAi = new List<double>();
-			var underWithoutAi = new List<double>();
-			var overWithAi = new List<double>();
-			var overWithoutAi = new List<double>();
-			foreach (var r in records)
-			{
-				if (r.TimeSpent == 0) continue;
-				double predicted = (byte)r.StoryPoints * ratio;
-				if (r.TimeSpent < predicted) // took less
-				{
-					double underPct = (predicted - r.TimeSpent) / r.TimeSpent * 100.0;
-					if (r.IsAiUsed) underWithAi.Add(underPct);
-					else underWithoutAi.Add(underPct);
-				}
-				else if (r.TimeSpent > predicted) // took more
-				{
-					double overPct = (r.TimeSpent - predicted) / r.TimeSpent * 100.0;
-					if (r.IsAiUsed) overWithAi.Add(overPct);
-					else overWithoutAi.Add(overPct);
-				}
-			}
-			estimationErrorUnderWithAi = underWithAi.Count > 0 ? underWithAi.Average() : 0;
-			estimationErrorUnderWithoutAi = underWithoutAi.Count > 0 ? underWithoutAi.Average() : 0;
-			estimationErrorOverWithAi = overWithAi.Count > 0 ? overWithAi.Average() : 0;
-			estimationErrorOverWithoutAi = overWithoutAi.Count > 0 ? overWithoutAi.Average() : 0;
-		}
-
 		// Assume TimeSpent/TimeSaved are in minutes; convert to hours
 		double totalTimeSpentHours = totalSpent / 60.0;
 		double totalTimeSavedHours = totalSaved / 60.0;
@@ -140,11 +102,7 @@ public class UsageService : IUsageService
 			TasksWithAiPercent = tasksWithAiPercent,
 			AvgRelativeSavingsOnAiTaskOnlySavesPercent = avgRelativeSavingsOnlySaves,
 			AvgRelativeIncreaseOnAiTaskOnlyOverrunsPercent = avgRelativeIncreaseOnlyOverruns,
-			AvgNetRelativeImpactOnAiTaskPercent = avgNetRelativeImpact,
-			EstimationErrorUnderPercentWithAi = estimationErrorUnderWithAi,
-			EstimationErrorUnderPercentWithoutAi = estimationErrorUnderWithoutAi,
-			EstimationErrorOverPercentWithAi = estimationErrorOverWithAi,
-			EstimationErrorOverPercentWithoutAi = estimationErrorOverWithoutAi
+			AvgNetRelativeImpactOnAiTaskPercent = avgNetRelativeImpact
 		};
 	}
 }
