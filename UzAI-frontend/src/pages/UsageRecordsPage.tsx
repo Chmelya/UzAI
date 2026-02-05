@@ -28,6 +28,8 @@ import {
 	type SortOrder,
 	type UsageTableFilterState,
 } from '../utils/usageTableUtils';
+import { downloadUsageReportPdf } from '../utils/usageReportPdf';
+import DownloadIcon from '@mui/icons-material/Download';
 
 export default function UsageRecordsPage() {
 	const { sprints, loading, error, retry } = useSprintsWithMetrics();
@@ -85,6 +87,15 @@ export default function UsageRecordsPage() {
 		const isAsc = orderBy === column && order === 'asc';
 		setOrder(isAsc ? 'desc' : 'asc');
 		setOrderBy(column);
+	};
+
+	const handleDownloadReport = () => {
+		downloadUsageReportPdf({
+			year: effectiveYear,
+			metrics: totalMetricsForRange,
+			sprints: sprintsForYear,
+			filter,
+		});
 	};
 
 	return (
@@ -162,35 +173,44 @@ export default function UsageRecordsPage() {
 				<Stack
 					direction='row'
 					alignItems='center'
-					justifyContent='flex-end'
-					gap={0.5}
+					justifyContent='space-between'
 					sx={{ mb: 1, px: 0 }}
 				>
-					<Typography variant='body2' color='text.secondary' sx={{ mr: 1 }}>
-						Year
-					</Typography>
-					<IconButton
+					<Button
+						variant='outlined'
 						size='small'
-						onClick={handlePrevYear}
-						disabled={!hasPrevYear}
-						aria-label='Previous year'
+						startIcon={<DownloadIcon />}
+						onClick={handleDownloadReport}
 					>
-						<ChevronLeftIcon fontSize='small' />
-					</IconButton>
-					<Typography variant='body2' sx={{ minWidth: 48, textAlign: 'center' }}>
-						{effectiveYear}
-					</Typography>
-					<IconButton
-						size='small'
-						onClick={handleNextYear}
-						disabled={!hasNextYear}
-						aria-label='Next year'
-					>
-						<ChevronRightIcon fontSize='small' />
-					</IconButton>
-					<Typography variant='caption' color='text.secondary' sx={{ ml: 0.5 }}>
-						{yearIndex + 1} of {years.length}
-					</Typography>
+						Download report
+					</Button>
+					<Stack direction='row' alignItems='center' gap={0.5}>
+						<Typography variant='body2' color='text.secondary' sx={{ mr: 1 }}>
+							Year
+						</Typography>
+						<IconButton
+							size='small'
+							onClick={handlePrevYear}
+							disabled={!hasPrevYear}
+							aria-label='Previous year'
+						>
+							<ChevronLeftIcon fontSize='small' />
+						</IconButton>
+						<Typography variant='body2' sx={{ minWidth: 48, textAlign: 'center' }}>
+							{effectiveYear}
+						</Typography>
+						<IconButton
+							size='small'
+							onClick={handleNextYear}
+							disabled={!hasNextYear}
+							aria-label='Next year'
+						>
+							<ChevronRightIcon fontSize='small' />
+						</IconButton>
+						<Typography variant='caption' color='text.secondary' sx={{ ml: 0.5 }}>
+							{yearIndex + 1} of {years.length}
+						</Typography>
+					</Stack>
 				</Stack>
 			)}
 
